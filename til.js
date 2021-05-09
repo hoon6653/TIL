@@ -64,3 +64,29 @@ class Queue {
         return result;
     }
 }
+
+//0509 브라우저 뒤로가기 앞으로가기
+function browserStack(actions, start) {
+    let prevStack = [];
+    let nextStack = [];
+    let current = start;
+
+    for (let i = 0; i < actions.length; i++) {
+        if (typeof actions[i] === 'string') {
+            prevStack.push(current);
+            current = actions[i];
+            nextStack = [];
+        } else if (actions[i] === -1) {
+            if (prevStack.length !== 0) {
+                nextStack.push(current);
+                current = prevStack.pop()
+            }
+        } else if (actions[i] === 1) {
+            if (nextStack.length !== 0) {
+                prevStack.push(current);
+                current = nextStack.pop()
+            }
+        }
+    }
+    return [prevStack, current, nextStack]
+}
