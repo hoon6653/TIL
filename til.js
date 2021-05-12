@@ -32,7 +32,6 @@ class Stack {
 
 
 //0509 큐 구현
-
 class Queue {
     constructor() {
         this.storage = {};
@@ -132,4 +131,30 @@ function improveBook(books, speeds) {
         }
     }
     return answer;
+}
+
+// 0512 프린터 구현
+function queuePrinter(bufferSize, capacities, documents) {
+    let buffer = [];
+    let count = 0;
+
+    for (let i = 0; i < bufferSize; i++) {
+        buffer.push(i)
+    }
+    buffer.fill(0)
+
+    for (let i = 0; i < documents.length; i++) {
+        buffer.shift()
+        if (buffer.reduce(function (a, b) {
+            return a + b
+        }, documents[i]) <= capacities) {
+            buffer.push(documents[i])
+        } else {
+            i = i - 1
+            buffer.push(0)
+        }
+        count = count + 1;
+    }
+
+    return count + bufferSize;
 }
