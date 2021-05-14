@@ -158,3 +158,32 @@ function queuePrinter(bufferSize, capacities, documents) {
 
     return count + bufferSize;
 }
+
+// 0514 트리 구현
+class Tree {
+    constructor(value) {
+        // constructor로 만든 객체는 트리의 Node가 된다
+        this.value = value;
+        this.children = [];
+    }
+
+    // 트리의 삽입 메서드를 만들고
+    insertNode(value) {
+        const childNode = new Tree(value);
+        this.children.push(childNode);
+    }
+
+    // 트리 안에 해당 값이 포함되어 있는지 확인하는 메서드를 만든다
+    contains(value) {
+        if (this.value === value) {
+            return true;
+        }
+        for (let i = 0; i < this.children.length; i++) {
+            const childNode = this.children[i]
+            if (childNode.contains(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
