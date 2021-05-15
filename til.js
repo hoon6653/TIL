@@ -187,3 +187,66 @@ class Tree {
         return false;
     }
 }
+
+// 0515 그래프 adjacency matrix 구현
+class GraphWithAdjacencyMatrix {
+    constructor() {
+        this.matrix = [];
+    }
+
+    addVertex() {
+        //버텍스 추가
+        const currentLength = this.matrix.length;
+        for (let i = 0; i < currentLength; i++) {
+            this.matrix[i].push(0);
+        }
+        this.matrix.push(new Array(currentLength + 1).fill(0));
+    }
+
+    contains(vertex) {
+        //버텍스가 있는지 확인
+        if (this.matrix[vertex]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    addEdge(from, to) {
+        const currentLength = this.matrix.length;
+        if (from === undefined || to === undefined) {
+            console.log("2개의 인자 확인");
+            return;
+        }
+        //간선을 추가할 수 없는 상황에서는 추가하지 말아야 함
+        if (from + 1 > currentLength || to + 1 > currentLength || from < 0 || to < 0) {
+            console.log("범위가 매트릭스 밖");
+            return;
+        }
+        //간선을 추가
+        this.matrix[from][to] = 1;
+    }
+
+    hasEdge(from, to) {
+        //두 버텍스 사이에 간선이 있는지 확인
+        if (this.matrix[from][to] === 1) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    removeEdge(from, to) {
+        const currentLength = this.matrix.length;
+        if (from === undefined || to === undefined) {
+            console.log("2개의 인자 확인");
+            return;
+        }
+        //간선을 지울 수 없는 상황에서는 지우지 말아야 함
+        if (from + 1 > currentLength || to + 1 > currentLength || from < 0 || to < 0) {
+            return;
+        }
+        //간선 지우기
+        this.matrix[from][to] = 0
+    }
+}
