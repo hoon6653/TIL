@@ -66,6 +66,10 @@ class Queue {
 
 //0510 브라우저 뒤로가기 앞으로가기
 function browserStack(actions, start) {
+    // actions : String과 Number 타입을 요소로 갖는 브라우저에서 행동한 순서를 차례대로 나열한 배열
+    // start : String 타입의 시작 페이지를 나타내는 현재 접속해 있는 대문자 알파벳
+    // let action = ["B", "C", -1, "D", "A", -1, 1, -1, -1]
+    // start = "A"
     let prevStack = [];
     let nextStack = [];
     let current = start;
@@ -92,6 +96,9 @@ function browserStack(actions, start) {
 
 // 0511 동화책 구현
 function improveBook(books, speeds) {
+    // books : Number 타입을 요소로 갖는 '퍼센트' 단위의 동화책 출간의 현재 진도가 나열된 배열
+    // speeds : Number 타입을 요소로 갖는 '퍼센트' 단위의 동화책 출간 담당자의 '하루'에 작업할 수 있는 업무 속도가 나열된 배열
+    // let books = [93, 30, 55] let speeds = [1, 30, 5]
     let answer = [];
     let workDay = [];
     let quotient = 0;
@@ -135,6 +142,14 @@ function improveBook(books, speeds) {
 
 // 0512 프린터 구현
 function queuePrinter(bufferSize, capacities, documents) {
+    // bufferSize : Number 타입의 인쇄 작업 목록 크기
+    // capacities : Number 타입의 인쇄 작업 목록에 추가될 수 있는 최대 용량
+    // documents : Number 타입을 요소로 갖는 문서 크기가 나열된 배열
+    /* 
+        let bufferSize = 2
+        let capacities = 10
+        let documents = [7,4,5,6]
+    */
     let buffer = [];
     let count = 0;
 
@@ -249,4 +264,22 @@ class GraphWithAdjacencyMatrix {
         //간선 지우기
         this.matrix[from][to] = 0
     }
+}
+
+// 0518 그래프 인접 행렬 생성하기
+function createMatrix(edges) {
+    // 인자 edges : Number 타입의 방향/무향인 간선들의 목록이 담긴 배열
+    // ex) [[0, 3, "directed"],[0, 2, "directed"],[1, 3, "directed"],[2, 1, "directed"]]
+    let matrixLength = edges.flat().filter(e => typeof e === 'number').reduce((a, b) => Math.max(a, b))
+    let matrix = new Array(matrixLength + 1).fill(0).map(() => new Array(matrixLength + 1).fill(0))
+
+    for (let i = 0; i < edges.length; i++) {
+        if (edges[i][2] === 'directed') {
+            matrix[edges[i][0]][edges[i][1]] = 1
+        } else if (edges[i][2] === 'undirected') {
+            matrix[edges[i][0]][edges[i][1]] = 1
+            matrix[edges[i][1]][edges[i][0]] = 1
+        }
+    }
+    return matrix;
 }
