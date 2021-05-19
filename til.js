@@ -283,3 +283,60 @@ function createMatrix(edges) {
     }
     return matrix;
 }
+
+// 0519 인접 행렬 길찾기
+function getDirections(matrix, from, to) {
+    // matrix : Array 타입을 요소로 갖는 인접 행렬이 담긴 2차원 배열
+    // from : Number 타입의 시작 정점
+    // to : Number 타입의 도착 정점
+    /* ex)
+        const result = getDirections(
+            [
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+                [0, 1, 0, 0]
+            ],
+            0,
+            2
+        )
+    */
+    function bfs(graph, root) {
+        let nodesLen = {};
+
+        for (let i = 0; i < graph.length; i++) {
+            nodesLen[i] = Infinity;
+        }
+        nodesLen[root] = 0;
+
+        let queue = [root];
+        let current;
+
+        while (queue.length !== 0) {
+            current = queue.shift();
+
+            let curConnected = graph[current];
+            let neighborIdx = [];
+            let idx = curConnected.indexOf(1);
+            while (idx !== -1) {
+                neighborIdx.push(idx);
+                idx = curConnected.indexOf(1, idx + 1);
+            }
+
+            for (let j = 0; j < neighborIdx.length; j++) {
+                if (nodesLen[neighborIdx[j]] === Infinity) {
+                    nodesLen[neighborIdx[j]] = nodesLen[current] + 1;
+                    queue.push(neighborIdx[j]);
+                }
+            }
+        }
+        return nodesLen;
+    };
+    let graph = matrix
+    let obj = bfs(graph, from)
+    if (obj[to] === Infinity) {
+        return false;
+    } else {
+        return true
+    }
+}
