@@ -572,33 +572,112 @@ let tiling = function (n) {
     return aux(n);
 };
 
-  // dynamic with tabulation: O(N)
-  // tabulation은 데이터를 테이블에 정리하면서 bottom-up 방식으로 해결하는 기법을 말합니다.
-  // let tiling = function (n) {
-  //   const memo = [0, 1, 2];
-  //   if (n <= 2) return memo[n];
-  //   for (let size = 3; size <= n; size++) {
-  //     memo[size] = memo[size - 1] + memo[size - 2];
-  //   }
-  //   return memo[n];
-  // };
+// dynamic with tabulation: O(N)
+// tabulation은 데이터를 테이블에 정리하면서 bottom-up 방식으로 해결하는 기법을 말합니다.
+// let tiling = function (n) {
+//   const memo = [0, 1, 2];
+//   if (n <= 2) return memo[n];
+//   for (let size = 3; size <= n; size++) {
+//     memo[size] = memo[size - 1] + memo[size - 2];
+//   }
+//   return memo[n];
+// };
 
-  // dynamic with slicing window: O(N)
-  // slicing window은 필요한 최소한의 데이터만을 활용하는 것을 말합니다.
-  // 크기 n의 문제에 대한 해결을 위해 필요한 데이터는 오직 2개뿐이라는 사실을 이용합니다.
-  // let tiling = function (n) {
-  //   let fst = 1,
-  //     snd = 2;
-  //   if (n <= 2) return n;
-  //   for (let size = 3; size <= n; size++) {
-  //     // 앞의 두 수를 더해 다음 수를 구할 수 있다.
-  //     const next = fst + snd;
-  //     // 다음 문제로 넘어가기 위해 필요한 2개의 데이터의 순서를 정리한다.
-  //     fst = snd;
-  //     snd = next;
-  //   }
-  //   return snd;
-  // };
+// dynamic with slicing window: O(N)
+// slicing window은 필요한 최소한의 데이터만을 활용하는 것을 말합니다.
+// 크기 n의 문제에 대한 해결을 위해 필요한 데이터는 오직 2개뿐이라는 사실을 이용합니다.
+// let tiling = function (n) {
+//   let fst = 1,
+//     snd = 2;
+//   if (n <= 2) return n;
+//   for (let size = 3; size <= n; size++) {
+//     // 앞의 두 수를 더해 다음 수를 구할 수 있다.
+//     const next = fst + snd;
+//     // 다음 문제로 넘어가기 위해 필요한 2개의 데이터의 순서를 정리한다.
+//     fst = snd;
+//     snd = next;
+//   }
+//   return snd;
+// };
 
 
-// 
+// 0815 토이문제 6 sudoku
+
+const sudoku = function (board) {
+    // TODO: 여기에 코드를 작성합니다.
+    const N = board.length;
+    const boxes = [
+        [0, 0, 0, 1, 1, 1, 2, 2, 2],
+        [0, 0, 0, 1, 1, 1, 2, 2, 2],
+        [0, 0, 0, 1, 1, 1, 2, 2, 2],
+        [3, 3, 3, 4, 4, 4, 5, 5, 5],
+        [3, 3, 3, 4, 4, 4, 5, 5, 5],
+        [3, 3, 3, 4, 4, 4, 5, 5, 5],
+        [6, 6, 6, 7, 7, 7, 8, 8, 8],
+        [6, 6, 6, 7, 7, 7, 8, 8, 8],
+        [6, 6, 6, 7, 7, 7, 8, 8, 8],
+    ];
+    const getBoxNum = (row, col) => boxes[row][col];
+
+    const blanks = [];
+    const rowUsed = [];
+    const colUsed = [];
+    const boxUsed = [];
+    for (let row = 0; row < N; row++) {
+        rowUsed.push(Array(N + 1).fill(false));
+        colUsed.push(Array(N + 1).fill(false));
+        boxUsed.push(Array(N + 1).fill(false));
+    }
+
+    for (let row = 0; row < N; row++) {
+        for (let col = 0; col < N; col++) {
+            if (board[row][col] === 0) {
+                blanks.push([row, col]);
+            } else {
+                const num = board[row][col];
+                const box = getBoxNum(row, col);
+                rowUsed[row][num] = true;
+                colUsed[col][num] = true;
+                boxUsed[box][num] = true;
+            }
+        }
+    }
+
+    const isValid = (row, col, num) => {
+        const box = getBoxNum(row, col);
+        return (
+            rowUsed[row][num] === false &&
+            colUsed[col][num] === false &&
+            boxUsed[box][num] === false
+        );
+    };
+
+    const toggleNum = (row, col, num) => {
+        const box = getBoxNum(row, col);
+        board[row][col] = num;
+        rowUsed[row][num] = !rowUsed[row][num];
+        colUsed[col][num] = !colUsed[col][num];
+        boxUsed[box][num] = !boxUsed[box][num];
+    };
+
+    const aux = (idx, blanks, board) => {
+        if (idx === blanks.length) {
+            return true;
+        }
+
+        const [row, col] = blanks[idx];
+        for (let num = 1; num <= 9; num++) {
+            if (isValid(row, col, num) === true) {
+                toggleNum(row, col, num);
+                if (aux(idx + 1, blanks, board) === true) {
+                    return true;
+                }
+                toggleNum(row, col, num);
+            }
+        }
+        return false;
+    };
+
+    aux(0, blanks, board);
+    return board;
+};
